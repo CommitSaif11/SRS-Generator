@@ -36,76 +36,123 @@ function section(title, content) {
   return content ? `<h2>${title}</h2><p>${content.replace(/\n/g,'<br>')}</p>` : "";
 }
 
+// Pure text-based PDF generation for you, Saif
 function downloadPDF() {
-  const element = document.getElementById("preview");
   const projectName = document.getElementById("project").value || "SRS_Document";
+  const author = document.getElementById("author").value || "";
+  const date = document.getElementById("date").value || "";
   
-  if (!element || !element.innerHTML.trim()) {
-    return;
+  // Get all the text content for you, Saif
+  const fields = ["purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
+  const content = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value]));
+  
+  // Create pure text PDF using jsPDF for you, Saif
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  let yPosition = 20;
+  const pageHeight = doc.internal.pageSize.height;
+  const margin = 20;
+  
+  // Helper function to add text with wrapping for you, Saif
+  function addText(text, fontSize = 12, isBold = false) {
+    if (isBold) {
+      doc.setFont("helvetica", "bold");
+    } else {
+      doc.setFont("helvetica", "normal");
+    }
+    doc.setFontSize(fontSize);
+    
+    const lines = doc.splitTextToSize(text, doc.internal.pageSize.width - 2 * margin);
+    
+    for (let line of lines) {
+      if (yPosition > pageHeight - 30) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.text(line, margin, yPosition);
+      yPosition += fontSize * 0.6;
+    }
+    yPosition += 5;
   }
   
-  // Detect if mobile for you, Saif
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  // Cover page for you, Saif
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text("Software Requirements Specification", 105, 100, { align: 'center' });
   
-  // Mobile-optimized settings for you, Saif
-  const options = isMobile ? {
-    margin: [10, 10, 10, 10],
-    filename: `${projectName}_SRS.pdf`,
-    image: { 
-      type: 'jpeg', 
-      quality: 1.0  // Maximum quality for mobile, Saif
-    },
-    html2canvas: { 
-      scale: 4,  // Higher scale for mobile, Saif
-      scrollY: 0,
-      useCORS: true,
-      letterRendering: true,
-      allowTaint: false,
-      backgroundColor: '#ffffff',
-      dpi: 192,  // Mobile DPI for you, Saif
-      logging: false,
-      width: element.scrollWidth,
-      height: element.scrollHeight
-    },
-    jsPDF: { 
-      unit: 'mm', 
-      format: 'a4', 
-      orientation: 'portrait',
-      compress: false
-    },
-    pagebreak: { 
-      mode: ['css', 'legacy'] 
-    }
-  } : {
-    // Desktop settings for you, Saif
-    margin: [15, 15, 15, 15],
-    filename: `${projectName}_SRS.pdf`,
-    image: { 
-      type: 'jpeg', 
-      quality: 0.98
-    },
-    html2canvas: { 
-      scale: 3,
-      scrollY: 0,
-      useCORS: true,
-      letterRendering: true,
-      allowTaint: false,
-      backgroundColor: '#ffffff',
-      dpi: 300,
-      logging: false
-    },
-    jsPDF: { 
-      unit: 'mm', 
-      format: 'a4', 
-      orientation: 'portrait',
-      compress: false
-    },
-    pagebreak: { 
-      mode: ['avoid-all', 'css', 'legacy'] 
-    }
-  };
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Project: ${projectName}`, 105, 130, { align: 'center' });
+  doc.text(`Author: ${author}`, 105, 150, { align: 'center' });
+  doc.text(`Date: ${date}`, 105, 170, { align: 'center' });
   
-  html2pdf().set(options).from(element).save();
+  doc.addPage();
+  yPosition = 20;
+  
+  // Add all sections for you, Saif
+  if (content.purpose) {
+    addText("1. Purpose", 16, true);
+    addText(content.purpose, 12);
+  }
+  
+  if (content.audience) {
+    addText("2. Intended Audience", 16, true);
+    addText(content.audience, 12);
+  }
+  
+  if (content.scope) {
+    addText("3. Project Scope", 16, true);
+    addText(content.scope, 12);
+  }
+  
+  if (content.definitions) {
+    addText("4. Definitions and Abbreviations", 16, true);
+    addText(content.definitions, 12);
+  }
+  
+  if (content.references) {
+    addText("5. References", 16, true);
+    addText(content.references, 12);
+  }
+  
+  if (content.ui) {
+    addText("6. User Interface Requirements", 16, true);
+    addText(content.ui, 12);
+  }
+  
+  if (content.sysint) {
+    addText("7. System Interfaces", 16, true);
+    addText(content.sysint, 12);
+  }
+  
+  if (content.constraints) {
+    addText("8. Design Constraints", 16, true);
+    addText(content.constraints, 12);
+  }
+  
+  if (content.fr) {
+    addText("9. Functional Requirements", 16, true);
+    addText(content.fr, 12);
+  }
+  
+  if (content.nfr) {
+    addText("10. Non-Functional Requirements", 16, true);
+    addText(content.nfr, 12);
+  }
+  
+  if (content.testing) {
+    addText("11. Testing and Verification", 16, true);
+    addText(content.testing, 12);
+  }
+  
+  if (content.deliverables) {
+    addText("12. Project Deliverables", 16, true);
+    addText(content.deliverables, 12);
+  }
+  
+  // Save the PDF for you, Saif
+  doc.save(`${projectName}_SRS.pdf`);
 }
 
 function showForm() {

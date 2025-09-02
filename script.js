@@ -2,9 +2,8 @@ function generatePreview() {
   const fields = ["project","author","date","purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
   const v = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value]));
   
-  // Check required fields for you, Saif
+  // Check required fields
   if (!v.project || !v.author || !v.purpose) {
-    alert("Please fill required fields, Saif!");
     return;
   }
   
@@ -16,18 +15,18 @@ function generatePreview() {
     <p><strong>Date:</strong> ${v.date || ""}</p>
   </div>`;
   
-  html += section("Purpose", v.purpose);
-  html += section("Audience", v.audience);
-  html += section("Scope", v.scope);
-  html += section("Definitions", v.definitions);
-  html += section("References", v.references);
-  html += section("User Interface", v.ui);
-  html += section("System Interfaces", v.sysint);
-  html += section("Constraints", v.constraints);
-  html += section("Functional Requirements", v.fr);
-  html += section("Nonfunctional Requirements", v.nfr);
-  html += section("Testing & Verification", v.testing);
-  html += section("Deliverables", v.deliverables);
+  html += section("1. Purpose", v.purpose);
+  html += section("2. Intended Audience", v.audience);
+  html += section("3. Project Scope", v.scope);
+  html += section("4. Definitions and Abbreviations", v.definitions);
+  html += section("5. References", v.references);
+  html += section("6. User Interface Requirements", v.ui);
+  html += section("7. System Interfaces", v.sysint);
+  html += section("8. Design Constraints", v.constraints);
+  html += section("9. Functional Requirements", v.fr);
+  html += section("10. Non-Functional Requirements", v.nfr);
+  html += section("11. Testing and Verification", v.testing);
+  html += section("12. Project Deliverables", v.deliverables);
   
   document.getElementById("preview").innerHTML = html;
   document.getElementById("preview").style.display = "block";
@@ -40,18 +39,41 @@ function section(title, content) {
 
 function downloadPDF() {
   const element = document.getElementById("preview");
+  const projectName = document.getElementById("project").value || "SRS_Document";
   
-  // Exact same options that work beautifully, Saif!
-  const opt = {
-    margin: [10,10,10,10],
-    filename: (document.getElementById("project").value || "SRS_Document") + ".pdf",
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 2, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['css','legacy'] }
+  if (!element || !element.innerHTML.trim()) {
+    return;
+  }
+  
+  const options = {
+    margin: [15, 15, 15, 15],
+    filename: `${projectName}_SRS.pdf`,
+    image: { 
+      type: 'jpeg', 
+      quality: 0.98
+    },
+    html2canvas: { 
+      scale: 3,
+      scrollY: 0,
+      useCORS: true,
+      letterRendering: true,
+      allowTaint: false,
+      backgroundColor: '#ffffff',
+      dpi: 300,
+      logging: false
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait',
+      compress: false
+    },
+    pagebreak: { 
+      mode: ['avoid-all', 'css', 'legacy'] 
+    }
   };
   
-  html2pdf().set(opt).from(element).save();
+  html2pdf().set(options).from(element).save();
 }
 
 function showForm() {
@@ -84,8 +106,6 @@ function sampleFill() {
       element.value = sampleData[key];
     }
   });
-  
-  alert("Sample data filled for you, Saif!");
 }
 
 function clearForm() {
@@ -98,7 +118,6 @@ function clearForm() {
   document.getElementById("downloadBtn").style.display = "none";
 }
 
-// Set today's date when page loads for you, Saif
 document.addEventListener('DOMContentLoaded', function() {
   const today = new Date().toISOString().slice(0, 10);
   document.getElementById("date").value = today;

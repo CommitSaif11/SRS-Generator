@@ -1,17 +1,26 @@
 function generatePreview() {
   const fields = ["project","author","date","purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
-  const v = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value]));
+  const v = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value.trim()]));
   
-  if (!v.project || !v.author || !v.purpose) {
+  // Check ALL fields are mandatory for you, Saif
+  const missingFields = [];
+  fields.forEach(field => {
+    if (!v[field]) {
+      missingFields.push(field.charAt(0).toUpperCase() + field.slice(1));
+    }
+  });
+  
+  if (missingFields.length > 0) {
+    alert(`Please fill all required fields, Saif!\nMissing: ${missingFields.join(', ')}`);
     return;
   }
   
   let html = `
   <div class='cover-page'>
     <h1>Software Requirements Specification</h1>
-    <p><strong>Project:</strong> ${v.project || ""}</p>
-    <p><strong>Author:</strong> ${v.author || ""}</p>
-    <p><strong>Date:</strong> ${v.date || ""}</p>
+    <p><strong>Project:</strong> ${v.project}</p>
+    <p><strong>Author:</strong> ${v.author}</p>
+    <p><strong>Date:</strong> ${v.date}</p>
   </div>`;
   
   html += section("1. Purpose", v.purpose);
@@ -36,123 +45,96 @@ function section(title, content) {
   return content ? `<h2>${title}</h2><p>${content.replace(/\n/g,'<br>')}</p>` : "";
 }
 
-// Pure text-based PDF generation for you, Saif
 function downloadPDF() {
+  const element = document.getElementById("preview");
   const projectName = document.getElementById("project").value || "SRS_Document";
-  const author = document.getElementById("author").value || "";
-  const date = document.getElementById("date").value || "";
   
-  // Get all the text content for you, Saif
-  const fields = ["purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
-  const content = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value]));
+  if (!element || !element.innerHTML.trim()) {
+    alert("Please generate preview first, Saif!");
+    return;
+  }
   
-  // Create pure text PDF using jsPDF for you, Saif
+  // Check if jsPDF is available for you, Saif
+  if (typeof window.jsPDF !== 'undefined') {
+    generateTextPDF();
+  } else if (typeof html2pdf !== 'undefined') {
+    const options = {
+      margin: 10,
+      filename: `${projectName}_SRS.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(options).from(element).save();
+  } else {
+    downloadAsText();
+  }
+}
+
+function generateTextPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
+  const projectName = document.getElementById("project").value || "SRS_Document";
   
-  let yPosition = 20;
-  const pageHeight = doc.internal.pageSize.height;
-  const margin = 20;
+  let y = 20;
   
-  // Helper function to add text with wrapping for you, Saif
-  function addText(text, fontSize = 12, isBold = false) {
-    if (isBold) {
-      doc.setFont("helvetica", "bold");
-    } else {
-      doc.setFont("helvetica", "normal");
-    }
-    doc.setFontSize(fontSize);
-    
-    const lines = doc.splitTextToSize(text, doc.internal.pageSize.width - 2 * margin);
-    
-    for (let line of lines) {
-      if (yPosition > pageHeight - 30) {
+  doc.setFontSize(20);
+  doc.text('Software Requirements Specification', 20, y);
+  y += 20;
+  
+  doc.setFontSize(12);
+  doc.text(`Project: ${document.getElementById("project").value}`, 20, y);
+  y += 10;
+  doc.text(`Author: ${document.getElementById("author").value}`, 20, y);
+  y += 10;
+  doc.text(`Date: ${document.getElementById("date").value}`, 20, y);
+  y += 20;
+  
+  const sections = [
+    ['Purpose', document.getElementById("purpose").value],
+    ['Audience', document.getElementById("audience").value],
+    ['Scope', document.getElementById("scope").value],
+    ['Definitions', document.getElementById("definitions").value],
+    ['References', document.getElementById("references").value],
+    ['User Interface', document.getElementById("ui").value],
+    ['System Interfaces', document.getElementById("sysint").value],
+    ['Constraints', document.getElementById("constraints").value],
+    ['Functional Requirements', document.getElementById("fr").value],
+    ['Non-Functional Requirements', document.getElementById("nfr").value],
+    ['Testing', document.getElementById("testing").value],
+    ['Deliverables', document.getElementById("deliverables").value]
+  ];
+  
+  sections.forEach(([title, content]) => {
+    if (content) {
+      if (y > 250) {
         doc.addPage();
-        yPosition = 20;
+        y = 20;
       }
-      doc.text(line, margin, yPosition);
-      yPosition += fontSize * 0.6;
+      doc.setFontSize(14);
+      doc.text(title, 20, y);
+      y += 10;
+      doc.setFontSize(10);
+      const lines = doc.splitTextToSize(content, 170);
+      doc.text(lines, 20, y);
+      y += lines.length * 5 + 10;
     }
-    yPosition += 5;
-  }
+  });
   
-  // Cover page for you, Saif
-  doc.setFontSize(24);
-  doc.setFont("helvetica", "bold");
-  doc.text("Software Requirements Specification", 105, 100, { align: 'center' });
-  
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Project: ${projectName}`, 105, 130, { align: 'center' });
-  doc.text(`Author: ${author}`, 105, 150, { align: 'center' });
-  doc.text(`Date: ${date}`, 105, 170, { align: 'center' });
-  
-  doc.addPage();
-  yPosition = 20;
-  
-  // Add all sections for you, Saif
-  if (content.purpose) {
-    addText("1. Purpose", 16, true);
-    addText(content.purpose, 12);
-  }
-  
-  if (content.audience) {
-    addText("2. Intended Audience", 16, true);
-    addText(content.audience, 12);
-  }
-  
-  if (content.scope) {
-    addText("3. Project Scope", 16, true);
-    addText(content.scope, 12);
-  }
-  
-  if (content.definitions) {
-    addText("4. Definitions and Abbreviations", 16, true);
-    addText(content.definitions, 12);
-  }
-  
-  if (content.references) {
-    addText("5. References", 16, true);
-    addText(content.references, 12);
-  }
-  
-  if (content.ui) {
-    addText("6. User Interface Requirements", 16, true);
-    addText(content.ui, 12);
-  }
-  
-  if (content.sysint) {
-    addText("7. System Interfaces", 16, true);
-    addText(content.sysint, 12);
-  }
-  
-  if (content.constraints) {
-    addText("8. Design Constraints", 16, true);
-    addText(content.constraints, 12);
-  }
-  
-  if (content.fr) {
-    addText("9. Functional Requirements", 16, true);
-    addText(content.fr, 12);
-  }
-  
-  if (content.nfr) {
-    addText("10. Non-Functional Requirements", 16, true);
-    addText(content.nfr, 12);
-  }
-  
-  if (content.testing) {
-    addText("11. Testing and Verification", 16, true);
-    addText(content.testing, 12);
-  }
-  
-  if (content.deliverables) {
-    addText("12. Project Deliverables", 16, true);
-    addText(content.deliverables, 12);
-  }
-  
-  // Save the PDF for you, Saif
   doc.save(`${projectName}_SRS.pdf`);
+}
+
+function downloadAsText() {
+  const projectName = document.getElementById("project").value || "SRS_Document";
+  const content = document.getElementById("preview").innerText;
+  
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${projectName}_SRS.txt`;
+  a.click();
+  window.URL.revokeObjectURL(url);
 }
 
 function showForm() {
@@ -191,10 +173,12 @@ function clearForm() {
   const fields = ["project","author","date","purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
   const today = new Date().toISOString().slice(0,10);
   
-  fields.forEach(f => document.getElementById(f).value = "");
-  document.getElementById("date").value = today;
-  document.getElementById("preview").style.display = "none";
-  document.getElementById("downloadBtn").style.display = "none";
+  if (confirm("Are you sure you want to clear all data, Saif?")) {
+    fields.forEach(f => document.getElementById(f).value = "");
+    document.getElementById("date").value = today;
+    document.getElementById("preview").style.display = "none";
+    document.getElementById("downloadBtn").style.display = "none";
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {

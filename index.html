@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SRS Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="fas fa-file-alt"></i>
+        <span>SRS Generator</span>
+      </div>
+      <div class="nav-links">
+  <a href="https://en.wikipedia.org/wiki/Software_requirements_specification" class="nav-link" target="_blank">
+    What is SRS? (Click Here)
+  </a>
+</div>
+    </div>
+  </nav>
+
+  <!-- Landing Section -->
+  <section class="landing" id="landing">
+    <div class="landing-container">
+      <div class="hero-content">
+        <h1 class="hero-title">Professional SRS Generator</h1>
+        <p class="hero-subtitle">
+          Create comprehensive Software Requirements Specification documents with ease. 
+          Our professional generator helps you build industry-standard SRS documents 
+          that meet IEEE standards and best practices.
+        </p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <i class="fas fa-document-text"></i>
+            <h3>Complete Documentation</h3>
+            <p>Generate full SRS with all required sections</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-download"></i>
+            <h3>PDF Export</h3>
+            <p>Export your SRS as professional PDF document</p>
+          </div>
+          
+          
+        </div>
+
+        <button class="cta-button" onclick="showForm()">
+          <i class="fas fa-arrow-right"></i>
+          Start Creating SRS
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form Section -->
+  <section class="form-section" id="formSection">
+    <div class="form-container">
+      <div class="form-header">
+        <h2>Create Your SRS Document</h2>
+        <p>Fill in the details below to generate your professional SRS document</p>
+      </div>
+
+      <div class="form-content">
+        <div class="form-grid">
+          <!-- Left Column -->
+          <div class="form-column">
+            <div class="input-group">
+              <label for="project">Project Name *</label>
+              <input id="project" type="text" placeholder="Enter your project name" required>
+            </div>
+
+            <div class="input-group">
+              <label for="author">Author *</label>
+              <input id="author" type="text" placeholder="Your name" required>
+            </div>
+
+            
+            <div class="input-group">
+              <label for="date">Date *</label>
+              <input id="date" type="date" required>
+            </div>
+
+            <div class="input-group">
+              <label for="purpose">Purpose *</label>
+              <textarea id="purpose" placeholder="Describe the purpose of your software system" rows="3" required></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="audience">Target Audience</label>
+              <textarea id="audience" placeholder="Who will use this document? (Developers, Testers, Clients, etc.)" rows="2"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="scope">Project Scope</label>
+              <textarea id="scope" placeholder="Define what the system will and won't do" rows="3"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="definitions">Definitions & Abbreviations</label>
+              <textarea id="definitions" placeholder="Define technical terms and abbreviations used" rows="2"></textarea>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="form-column">
+            <div class="input-group">
+              <label for="references">References</label>
+              <textarea id="references" placeholder="List relevant documents, standards, or resources" rows="2"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="ui">User Interface Requirements</label>
+              <textarea id="ui" placeholder="Describe the user interface requirements" rows="3"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="sysint">System Interfaces</label>
+              <textarea id="sysint" placeholder="Describe system interfaces (APIs, databases, external systems)" rows="3"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="constraints">Design Constraints</label>
+              <textarea id="constraints" placeholder="Technical constraints, platform requirements, etc." rows="2"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="fr">Functional Requirements</label>
+              <textarea id="fr" placeholder="List functional requirements (FR1, FR2, etc.)" rows="4"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="nfr">Non-Functional Requirements</label>
+              <textarea id="nfr" placeholder="Performance, security, scalability requirements" rows="3"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="testing">Testing & Verification</label>
+              <textarea id="testing" placeholder="Testing approach and verification methods" rows="2"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="deliverables">Project Deliverables</label>
+              <textarea id="deliverables" placeholder="List project deliverables and milestones" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="sampleFill()">
+            <i class="fas fa-magic"></i>
+            Fill Sample Data
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="clearForm()">
+            <i class="fas fa-trash"></i>
+            Clear Form
+          </button>
+          <button type="button" class="btn btn-primary" onclick="generatePreview()">
+            <i class="fas fa-eye"></i>
+            Generate Preview
+          </button>
+          <button type="button" class="btn btn-success" id="downloadBtn" style="display:none" onclick="downloadPDF()">
+            <i class="fas fa-download"></i>
+            Download PDF
+          </button>
+        </div>
+
+        <div id="preview" class="preview-section"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p>&copy; 2025 SRS Generator. Created by Md Saif Alam.</p>
+      <div class="footer-links">
+        <a href="https://github.com/CommitSaif11"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/md-saif-alam-18426b311?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin"></i></a>
+        
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

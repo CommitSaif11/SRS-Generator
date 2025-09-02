@@ -6,7 +6,6 @@
   <title>SRS Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,10 +17,10 @@
         <span>SRS Generator</span>
       </div>
       <div class="nav-links">
-  <a href="https://en.wikipedia.org/wiki/Software_requirements_specification" class="nav-link" target="_blank">
-    What is SRS? (Click Here)
-  </a>
-</div>
+        <a href="https://en.wikipedia.org/wiki/Software_requirements_specification" class="nav-link" target="_blank">
+          What is SRS? (Click Here)
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -44,11 +43,19 @@
           </div>
           <div class="feature-card">
             <i class="fas fa-download"></i>
-            <h3>PDF Export</h3>
-            <p>Export your SRS as professional PDF document</p>
+            <h3>Word Export</h3>
+            <p>Export your SRS as professional Word document</p>
           </div>
-          
-          
+          <div class="feature-card">
+            <i class="fas fa-check-circle"></i>
+            <h3>IEEE Standards</h3>
+            <p>Follows industry best practices and standards</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-mobile-alt"></i>
+            <h3>Mobile Friendly</h3>
+            <p>Works perfectly on all devices</p>
+          </div>
         </div>
 
         <button class="cta-button" onclick="showForm()">
@@ -64,7 +71,7 @@
     <div class="form-container">
       <div class="form-header">
         <h2>Create Your SRS Document</h2>
-        <p>Fill in the details below to generate your professional SRS document</p>
+        <p>Fill in all the details below to generate your professional SRS document</p>
       </div>
 
       <div class="form-content">
@@ -81,7 +88,6 @@
               <input id="author" type="text" placeholder="Your name" required>
             </div>
 
-            
             <div class="input-group">
               <label for="date">Date *</label>
               <input id="date" type="date" required>
@@ -93,61 +99,61 @@
             </div>
 
             <div class="input-group">
-              <label for="audience">Target Audience</label>
-              <textarea id="audience" placeholder="Who will use this document? (Developers, Testers, Clients, etc.)" rows="2"></textarea>
+              <label for="audience">Target Audience *</label>
+              <textarea id="audience" placeholder="Who will use this document? (Developers, Testers, Clients, etc.)" rows="2" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="scope">Project Scope</label>
-              <textarea id="scope" placeholder="Define what the system will and won't do" rows="3"></textarea>
+              <label for="scope">Project Scope *</label>
+              <textarea id="scope" placeholder="Define what the system will and won't do" rows="3" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="definitions">Definitions & Abbreviations</label>
-              <textarea id="definitions" placeholder="Define technical terms and abbreviations used" rows="2"></textarea>
+              <label for="definitions">Definitions & Abbreviations *</label>
+              <textarea id="definitions" placeholder="Define technical terms and abbreviations used" rows="2" required></textarea>
             </div>
           </div>
 
           <!-- Right Column -->
           <div class="form-column">
             <div class="input-group">
-              <label for="references">References</label>
-              <textarea id="references" placeholder="List relevant documents, standards, or resources" rows="2"></textarea>
+              <label for="references">References *</label>
+              <textarea id="references" placeholder="List relevant documents, standards, or resources" rows="2" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="ui">User Interface Requirements</label>
-              <textarea id="ui" placeholder="Describe the user interface requirements" rows="3"></textarea>
+              <label for="ui">User Interface Requirements *</label>
+              <textarea id="ui" placeholder="Describe the user interface requirements" rows="3" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="sysint">System Interfaces</label>
-              <textarea id="sysint" placeholder="Describe system interfaces (APIs, databases, external systems)" rows="3"></textarea>
+              <label for="sysint">System Interfaces *</label>
+              <textarea id="sysint" placeholder="Describe system interfaces (APIs, databases, external systems)" rows="3" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="constraints">Design Constraints</label>
-              <textarea id="constraints" placeholder="Technical constraints, platform requirements, etc." rows="2"></textarea>
+              <label for="constraints">Design Constraints *</label>
+              <textarea id="constraints" placeholder="Technical constraints, platform requirements, etc." rows="2" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="fr">Functional Requirements</label>
-              <textarea id="fr" placeholder="List functional requirements (FR1, FR2, etc.)" rows="4"></textarea>
+              <label for="fr">Functional Requirements *</label>
+              <textarea id="fr" placeholder="List functional requirements (FR1, FR2, etc.)" rows="4" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="nfr">Non-Functional Requirements</label>
-              <textarea id="nfr" placeholder="Performance, security, scalability requirements" rows="3"></textarea>
+              <label for="nfr">Non-Functional Requirements *</label>
+              <textarea id="nfr" placeholder="Performance, security, scalability requirements" rows="3" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="testing">Testing & Verification</label>
-              <textarea id="testing" placeholder="Testing approach and verification methods" rows="2"></textarea>
+              <label for="testing">Testing & Verification *</label>
+              <textarea id="testing" placeholder="Testing approach and verification methods" rows="2" required></textarea>
             </div>
 
             <div class="input-group">
-              <label for="deliverables">Project Deliverables</label>
-              <textarea id="deliverables" placeholder="List project deliverables and milestones" rows="2"></textarea>
+              <label for="deliverables">Project Deliverables *</label>
+              <textarea id="deliverables" placeholder="List project deliverables and milestones" rows="2" required></textarea>
             </div>
           </div>
         </div>
@@ -165,9 +171,9 @@
             <i class="fas fa-eye"></i>
             Generate Preview
           </button>
-          <button type="button" class="btn btn-success" id="downloadBtn" style="display:none" onclick="downloadPDF()">
-            <i class="fas fa-download"></i>
-            Download PDF
+          <button type="button" class="btn btn-success" id="downloadBtn" style="display:none" onclick="downloadWord()">
+            <i class="fas fa-file-word"></i>
+            Download Word Document
           </button>
         </div>
 
@@ -178,11 +184,10 @@
 
   <footer class="footer">
     <div class="footer-container">
-      <p>&copy; 2025 SRS Generator. Created by Md Saif Alam.</p>
+      <p>&copy; 2025 SRS Generator. Created with 💙 by Saif Alam.</p>
       <div class="footer-links">
-        <a href="https://github.com/CommitSaif11"><i class="fab fa-github"></i></a>
-        <a href="https://www.linkedin.com/in/md-saif-alam-18426b311?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin"></i></a>
-        
+        <a href="https://github.com/CommitSaif11" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/md-saif-alam-18426b311" target="_blank"><i class="fab fa-linkedin"></i></a>
       </div>
     </div>
   </footer>

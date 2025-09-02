@@ -45,95 +45,92 @@ function section(title, content) {
   return content ? `<h2>${title}</h2><p>${content.replace(/\n/g,'<br>')}</p>` : "";
 }
 
-function downloadPDF() {
-  const element = document.getElementById("preview");
+// Beautiful Word document download for you, Saif!
+function downloadWord() {
   const projectName = document.getElementById("project").value || "SRS_Document";
+  const author = document.getElementById("author").value || "";
+  const date = document.getElementById("date").value || "";
   
-  if (!element || !element.innerHTML.trim()) {
-    alert("Please generate preview first, Saif!");
-    return;
-  }
+  // Get all content for you, Saif
+  const fields = ["purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
+  const content = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value]));
   
-  // Check if jsPDF is available for you, Saif
-  if (typeof window.jsPDF !== 'undefined') {
-    generateTextPDF();
-  } else if (typeof html2pdf !== 'undefined') {
-    const options = {
-      margin: 10,
-      filename: `${projectName}_SRS.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(options).from(element).save();
-  } else {
-    downloadAsText();
-  }
-}
+  // Create Word document content for you, Saif
+  let wordContent = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Software Requirements Specification</title>
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+h1 { text-align: center; color: #2563eb; border-bottom: 3px solid #2563eb; padding-bottom: 10px; }
+h2 { color: #1e40af; margin-top: 30px; margin-bottom: 10px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; }
+p { margin-bottom: 15px; text-align: justify; }
+.cover { text-align: center; margin-bottom: 50px; }
+.cover p { font-size: 16px; margin: 10px 0; }
+</style>
+</head>
+<body>
 
-function generateTextPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const projectName = document.getElementById("project").value || "SRS_Document";
-  
-  let y = 20;
-  
-  doc.setFontSize(20);
-  doc.text('Software Requirements Specification', 20, y);
-  y += 20;
-  
-  doc.setFontSize(12);
-  doc.text(`Project: ${document.getElementById("project").value}`, 20, y);
-  y += 10;
-  doc.text(`Author: ${document.getElementById("author").value}`, 20, y);
-  y += 10;
-  doc.text(`Date: ${document.getElementById("date").value}`, 20, y);
-  y += 20;
-  
-  const sections = [
-    ['Purpose', document.getElementById("purpose").value],
-    ['Audience', document.getElementById("audience").value],
-    ['Scope', document.getElementById("scope").value],
-    ['Definitions', document.getElementById("definitions").value],
-    ['References', document.getElementById("references").value],
-    ['User Interface', document.getElementById("ui").value],
-    ['System Interfaces', document.getElementById("sysint").value],
-    ['Constraints', document.getElementById("constraints").value],
-    ['Functional Requirements', document.getElementById("fr").value],
-    ['Non-Functional Requirements', document.getElementById("nfr").value],
-    ['Testing', document.getElementById("testing").value],
-    ['Deliverables', document.getElementById("deliverables").value]
-  ];
-  
-  sections.forEach(([title, content]) => {
-    if (content) {
-      if (y > 250) {
-        doc.addPage();
-        y = 20;
-      }
-      doc.setFontSize(14);
-      doc.text(title, 20, y);
-      y += 10;
-      doc.setFontSize(10);
-      const lines = doc.splitTextToSize(content, 170);
-      doc.text(lines, 20, y);
-      y += lines.length * 5 + 10;
-    }
+<div class="cover">
+<h1>Software Requirements Specification</h1>
+<p><strong>Project:</strong> ${projectName}</p>
+<p><strong>Author:</strong> ${author}</p>
+<p><strong>Date:</strong> ${date}</p>
+</div>
+
+<h2>1. Purpose</h2>
+<p>${content.purpose}</p>
+
+<h2>2. Intended Audience</h2>
+<p>${content.audience}</p>
+
+<h2>3. Project Scope</h2>
+<p>${content.scope}</p>
+
+<h2>4. Definitions and Abbreviations</h2>
+<p>${content.definitions}</p>
+
+<h2>5. References</h2>
+<p>${content.references}</p>
+
+<h2>6. User Interface Requirements</h2>
+<p>${content.ui}</p>
+
+<h2>7. System Interfaces</h2>
+<p>${content.sysint}</p>
+
+<h2>8. Design Constraints</h2>
+<p>${content.constraints}</p>
+
+<h2>9. Functional Requirements</h2>
+<p>${content.fr.replace(/\n/g, '<br>')}</p>
+
+<h2>10. Non-Functional Requirements</h2>
+<p>${content.nfr.replace(/\n/g, '<br>')}</p>
+
+<h2>11. Testing and Verification</h2>
+<p>${content.testing}</p>
+
+<h2>12. Project Deliverables</h2>
+<p>${content.deliverables}</p>
+
+</body>
+</html>`;
+
+  // Create and download Word document for you, Saif
+  const blob = new Blob([wordContent], { 
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
   });
   
-  doc.save(`${projectName}_SRS.pdf`);
-}
-
-function downloadAsText() {
-  const projectName = document.getElementById("project").value || "SRS_Document";
-  const content = document.getElementById("preview").innerText;
-  
-  const blob = new Blob([content], { type: 'text/plain' });
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${projectName}_SRS.txt`;
+  a.download = `${projectName}_SRS.doc`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
 }
 

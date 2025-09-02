@@ -2,7 +2,6 @@ function generatePreview() {
   const fields = ["project","author","date","purpose","audience","scope","definitions","references","ui","sysint","constraints","fr","nfr","testing","deliverables"];
   const v = Object.fromEntries(fields.map(f=>[f, document.getElementById(f).value]));
   
-  // Check required fields
   if (!v.project || !v.author || !v.purpose) {
     return;
   }
@@ -45,7 +44,40 @@ function downloadPDF() {
     return;
   }
   
-  const options = {
+  // Detect if mobile for you, Saif
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Mobile-optimized settings for you, Saif
+  const options = isMobile ? {
+    margin: [10, 10, 10, 10],
+    filename: `${projectName}_SRS.pdf`,
+    image: { 
+      type: 'jpeg', 
+      quality: 1.0  // Maximum quality for mobile, Saif
+    },
+    html2canvas: { 
+      scale: 4,  // Higher scale for mobile, Saif
+      scrollY: 0,
+      useCORS: true,
+      letterRendering: true,
+      allowTaint: false,
+      backgroundColor: '#ffffff',
+      dpi: 192,  // Mobile DPI for you, Saif
+      logging: false,
+      width: element.scrollWidth,
+      height: element.scrollHeight
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait',
+      compress: false
+    },
+    pagebreak: { 
+      mode: ['css', 'legacy'] 
+    }
+  } : {
+    // Desktop settings for you, Saif
     margin: [15, 15, 15, 15],
     filename: `${projectName}_SRS.pdf`,
     image: { 
